@@ -9,6 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func CreatePassword(c *gin.Context) {
@@ -22,13 +23,16 @@ func CreatePassword(c *gin.Context) {
 		return
 	}
 
+	// Hash the password using the selected hash algorithm
 	hashedPassword, err := utils.HashPassword(request.Password, request.HashType)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
+	// Store the hashed password in the MongoDB collection
 	password := models.Password{
+		ID:        primitive.NewObjectID(),
 		Password:  hashedPassword,
 		HashType:  request.HashType,
 		CreatedAt: time.Now(),
@@ -40,7 +44,10 @@ func CreatePassword(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, password)
+	// Respond with hashed password
+	c.JSON(http.StatusOK, gin.H{
+		"hashedPassword": hashedPassword,
+	})
 }
 
 func GetAllPasswords(c *gin.Context) {

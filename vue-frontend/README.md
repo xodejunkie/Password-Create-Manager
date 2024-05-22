@@ -1,4 +1,4 @@
-# password-manager-frontend
+# password-manager-vue-frontend
 
 ## Project setup
 ```

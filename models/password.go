@@ -5,6 +5,7 @@ import (
 	"log"
 	"time"
 
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -22,12 +23,12 @@ func ConnectDB() {
 		log.Fatal(err)
 	}
 
-	PasswordCollection = client.Database("passwordmanager").Collection("passwords")
+	PasswordCollection = client.Database("password-create").Collection("passwords")
 }
 
 type Password struct {
-	ID        string    `json:"id" bson:"_id,omitempty"`
-	Password  string    `json:"password" bson:"password"`
-	HashType  string    `json:"hash_type" bson:"hash_type"`
-	CreatedAt time.Time `json:"created_at" bson:"created_at"`
+	ID        primitive.ObjectID `json:"id" bson:"_id,omitempty"`
+	Password  string             `json:"password" bson:"password"`
+	HashType  string             `json:"hash_type" bson:"hash_type"`
+	CreatedAt time.Time          `json:"created_at" bson:"created_at"`
 }
